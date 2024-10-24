@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #time {
+            font-size: 2em;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="time">0:00</div>
+    <button id="start">Start</button>
+    <button id="pause">Pause</button>
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+
+    <script>
+        let startTime, updatedTime, difference, tInterval;
+        let running = false;
+        let pausedTime = 0;
+
+        function startTimer() {
+            if (!running) {
+                startTime = new Date().getTime() - pausedTime; // Adjust start time for paused duration
+                tInterval = setInterval(updateTime, 1000);
+                running = true;
+            }
+        }
+
+        function pauseTimer() {
+            if (running) {
+                clearInterval(tInterval);
+                pausedTime = new Date().getTime() - startTime; // Calculate paused duration
+                running = false;
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(tInterval);
+            running = false;
+            pausedTime = 0; // Reset paused time
+        }
+
+        function resetTimer() {
+            clearInterval(tInterval);
+            running = false;
+            pausedTime = 0;
+            document.getElementById("time").innerHTML = "0:00";
+        }
+
+        function updateTime() {
+            updatedTime = new Date().getTime();
+            difference = updatedTime - startTime;
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            document.getElementById("time").innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        }
+
+        document.getElementById("start").onclick = startTimer;
+        document.getElementById("pause").onclick = pauseTimer;
+        document.getElementById("stop").onclick = stopTimer;
+        document.getElementById("reset").onclick = resetTimer;
+    </script>
+</body>
+</html>
